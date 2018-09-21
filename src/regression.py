@@ -8,26 +8,19 @@ from year_dict import year_dict
 def clean_data(df):
         df.iloc[:,[39,40,41]].fillna('None or Unspecified', inplace=True)
         y = df['SalePrice']
+        # Drop columns with potential data leakage
         df.drop(columns=['SaleID', 'SalePrice', 'datasource', 'auctioneerID'],
                 inplace=True)
+        # Create binary indicator feature if missing MachineHoursCurrentMeter
         df['Missing_MHCM'] == df['MachineHoursCurrentMeter'].isna()
-        df['MachineHoursCurrentMeter'].fillna(0, inplace=True)
+
         df['UsageBand'].fillna('None or Unspecified', inplace=True)
         df['fiModel'] = df['fiModelDesc'] + '-' +\
                         df['fiBaseModel'] + '-' + \
                         df['fiSecondaryDesc'].fillna('_') + '-' + \
-                        df['fiModelSeries'].fillna('').astype(str) + '-' + \
-                        df['fiModelDescriptor'].fillna('')
-        df.drop(columns=['fiModelDesc',
-                        'fiBaseModel',
-                        'fiSecondaryDesc',
-                        'fiModelSeries',
-                        'fiModelDescriptor'])
+                        df['fiModelSeries'].fillna('_').astype(str) + '-' + \
+                        df['fiModelDescriptor'].fillna('_')
 
-
-        for model in s:
-                mask = (df.loc[:,'ModelID']==model)&(df.loc[:,'YearMade']==1000)
-                df.loc[mask, 'YearMade'] = 1000
         
 
 
