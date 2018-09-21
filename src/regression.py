@@ -8,11 +8,10 @@ from year_dict import year_dict
 def clean_data(df):
         df.iloc[:,[39,40,41]].fillna('None or Unspecified', inplace=True)
         y = df['SalePrice']
-        # Drop columns with potential data leakage
-        df.drop(columns=['SaleID', 'SalePrice', 'datasource', 'auctioneerID'],
-                inplace=True)
-        # Create binary indicator feature if missing MachineHoursCurrentMeter
-        df['Missing_MHCM'] == df['MachineHoursCurrentMeter'].isna()
+        # Create binary indicator features for missing values
+        df['Missing_YearMade'] = df['YearMade'] == 1000
+        df['Missing_MHCM'] = df['MachineHoursCurrentMeter'].isna()
+
 
         df['UsageBand'].fillna('None or Unspecified', inplace=True)
         df['fiModel'] = df['fiModelDesc'] + '-' +\
